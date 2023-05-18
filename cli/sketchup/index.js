@@ -81,7 +81,7 @@ export default class Sketchup {
       { rename: folder_name + "/loader", name: "loader", extension: "rb" },
       {
         rename: folder_name + "/.gitignore",
-        name: ".gitignore",
+        name: ".gitignore.handlebars",
         extension: null,
       },
     ];

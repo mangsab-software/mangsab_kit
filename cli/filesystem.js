@@ -1,4 +1,4 @@
-import Handlebars from "Handlebars";
+import Handlebars from "handlebars";
 import fs from "fs-extra";
 import path from "path";
 const root_path = path.dirname(process.argv[1]);
@@ -32,11 +32,11 @@ export const WriteFile = async (_path_call, _path_template, _file, _data) => {
 
 export const CreateDictionary = async (_path) => {
   if (!fs.existsSync(_path)) {
-    fs.mkdirSync(_path, {recursive: true});
+    fs.mkdirSync(_path, { recursive: true });
   }
 };
 
 export const ReadPackageName = async (_path, _file) => {
-  const data = await fs.readFile(_path+"/"+_file, 'utf-8');
+  const data = await fs.readFile(_path + "/" + _file, "utf-8");
   return data.match(/(^.*)/)[1].split(" ")[1];
-}
+};

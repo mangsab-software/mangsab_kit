@@ -1,6 +1,6 @@
 {
-  "name": "mango-kit",
-  "version": "1.0.0",
+  "name": "mangsab-kit",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "figlet": "^1.6.0",
     "fs-extra": "^11.1.1",

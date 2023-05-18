@@ -62,7 +62,7 @@ export default class Golang {
       { name: "database/redis", extension: "go" },
       { name: "routes/route", extension: "go" },
       { name: "dockerfile", extension: null },
-      { name: ".gitignore", extension: null },
+      { rename: ".gitignore", name: ".gitignore.handlebars", extension: null },
       { name: ".env.example", extension: null },
     ];
 

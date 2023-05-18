@@ -1,0 +1,117 @@
+package main
+
+import (
+	"context"
+	"io"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+	"{{project_name}}/routes"
+	"{{project_name}}/database"
+	"github.com/joho/godotenv"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+)
+
+func init() {
+	if os.Getenv("APP_PRODUCTION") == "" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatal().Err(err).Msg("Error loading .env file")
+		}
+	}
+	currentTime := time.Now()
+	formattedDateTime := currentTime.Format("2006-01-02@15-04-05")
+
+	logFolder := "logs/"
+
+	if _, err := os.Stat("logs"); os.IsNotExist(err) {
+		os.Mkdir("logs", os.ModePerm)
+	}
+
+	logFile := logFolder + "runtime_" + formattedDateTime + ".json"
+
+	file, err := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal().
+			Err(err).
+			Msg("[Server] Error opening log file")
+	}
+
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnixMs
+	multi := io.MultiWriter(
+		file,
+		zerolog.ConsoleWriter{
+			Out:        os.Stderr,
+			TimeFormat: time.RFC3339,
+		},
+	)
+
+	log.Logger = zerolog.
+		New(multi).
+		With().
+		Timestamp().
+		Logger()
+}
+
+func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	
+	mongoSetup := database.MongoSetup{
+		Endpoint: os.Getenv("DB_ENDPOINT"),
+		Port:     os.Getenv("DB_PORT"),
+		Username: os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASS"),
+		DBName:   os.Getenv("DB_NAME"),
+	}
+	mongoConn := mongoSetup.NewMongoDB()
+
+	if err := mongoConn.Connect(ctx); err != nil {
+		log.Fatal().Err(err).Msg("[MongoDB] can't connecting to server")
+	}
+
+	mongoSetup.TestPing(ctx, mongoConn)
+
+	redisSetup := database.RedisSetup{
+		Endpoint: os.Getenv("REDIS_ENDPOINT"),
+		Password: os.Getenv("REDIS_PASS"),
+		Port:     os.Getenv("REDIS_PORT"),
+	}
+
+	redisConn := redisSetup.NewRedis()
+
+	redisSetup.TestPing(ctx, redisConn)
+
+	setupApp := routes.SetupApp{
+		DB:    mongoConn,
+		Redis: redisConn,
+	}
+	app := setupApp.NewApp()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		_ = <-quit
+		log.Warn().Msg("[Server] Gracefully shutting down...")
+		if err := app.ShutdownWithContext(ctx); err != nil {
+			log.Fatal().
+				Err(err).
+				Msg("[Server] Failed to shutdown gracefully.")
+		}
+	}()
+
+	appPort := os.Getenv("APP_PORT")
+	if appPort == "" {
+		appPort = "8080"
+	}
+
+	if err := app.Listen(":" + appPort); err != nil {
+		log.Panic().Err(err)
+	}
+	log.Warn().Msg("[Server] Starting on Port " + appPort)
+
+	log.Warn().Msg("[Server] Running cleanup tasks...")
+	defer cancel()
+}

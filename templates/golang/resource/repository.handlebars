@@ -1,0 +1,11 @@
+package {{package_name}}
+
+import "go.mongodb.org/mongo-driver/mongo"
+
+type {{package_name}}RepositoryDependency struct {
+	DB *mongo.Client
+}
+
+func New{{name}}Repository(db *mongo.Client) {{name}}Repository {
+	return &{{package_name}}RepositoryDependency{DB: db}
+}

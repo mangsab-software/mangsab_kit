@@ -1,0 +1,43 @@
+require 'json'
+
+Sketchup.require File.join(File.dirname(__FILE__), 'main')
+
+module {{module_main}}::{{project_name}}
+  file = __FILE__
+
+  unless file_loaded? file
+
+    sketchup_version = Sketchup.version_number.to_s
+
+    if sketchup_version[0, 2].to_i > 21
+
+      UI.menu('Extensions').add_separator
+
+      extensions_menu = UI.menu('Extensions').add_submenu('{{project_name}}')
+
+      cmd1 = UI::Command.new('open') { main }
+
+      extensions_menu.add_item(cmd1)
+
+      toolbar = UI::Toolbar.new('{{project_name}}')
+
+      path_to_images = File.join(File.dirname(__FILE__), 'assets')
+
+      toolbar_item1 = UI::Command.new('open') { main }
+
+      toolbar_item1.small_icon = File.join(path_to_images, 'icon.png')
+
+      toolbar_item1.large_icon = File.join(path_to_images, 'icon.png')
+
+      toolbar_item1.tooltip = 'open {{project_name}}'
+
+      toolbar.add_item(toolbar_item1)
+
+      toolbar.show
+
+      file_loaded file
+
+    end
+
+  end
+end

@@ -1,0 +1,9 @@
+package {{package_name}}
+
+type {{package_name}}UseCaseDependency struct {
+	repository {{name}}Repository
+}
+
+func New{{name}}UseCase(repository {{name}}Repository) {{name}}UseCase {
+	return &{{package_name}}UseCaseDependency{repository: repository}
+}

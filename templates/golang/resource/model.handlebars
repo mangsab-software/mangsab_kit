@@ -1,0 +1,17 @@
+package {{package_name}}
+
+import (
+	"time"
+)
+
+type {{name}} struct {
+	{{name}}Id     int64
+	IsActive     bool
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    time.Time
+}
+
+func (b *{{name}}) TableName() string {
+	return "{{package_name}}s"
+}

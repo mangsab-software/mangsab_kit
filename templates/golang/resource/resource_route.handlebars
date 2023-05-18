@@ -1,0 +1,12 @@
+package routes
+
+import "{{project_name}}/packages/{{package_name}}"
+
+func (r *SetupRoute) New{{name}}Route() {
+	repository := {{package_name}}.New{{name}}Repository(r.DB)
+	usecase := {{package_name}}.New{{name}}UseCase(repository)
+	handler := {{package_name}}.New{{name}}Handler(usecase)
+	{{package_name}} := r.API.Group("{{package_name}}")
+
+	{{package_name}}.Post("/", handler.Register)
+}

@@ -1,0 +1,48 @@
+package routes
+
+import (
+	"github.com/bytedance/sonic"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/gofiber/helmet/v2"
+	"github.com/redis/go-redis/v9"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+type (
+	SetupApp struct {
+		DB    *mongo.Client
+		Redis *redis.Client
+	}
+	SetupRoute struct {
+		DB    *mongo.Client
+		Redis *redis.Client
+		API fiber.Router
+	}
+)
+
+// SetupRouter is function setup main router controller
+func (s *SetupApp) NewApp() *fiber.App {
+	r := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+		CaseSensitive:         true,
+		StrictRouting:         true,
+		JSONEncoder:           sonic.Marshal,
+		JSONDecoder:           sonic.Unmarshal,
+	})
+	r.Use(helmet.New())
+	r.Use(cors.New())
+	r.Use(logger.New(logger.Config{
+		TimeFormat: "02-Jan-2006",
+		TimeZone:   "Asia/Bangkok",
+	}))
+	r.Use(requestid.New())
+	api := r.Group("api")
+	setupRoute := SetupRoute{
+		API: api,
+	}
+
+	return r
+}

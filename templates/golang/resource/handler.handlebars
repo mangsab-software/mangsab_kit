@@ -1,0 +1,11 @@
+package {{package_name}}
+
+import "github.com/gofiber/fiber/v2"
+
+type {{package_name}}HandlerDependency struct {
+	useCase {{name}}UseCase
+}
+
+func New{{name}}Handler(useCase {{name}}UseCase) {{name}}Handler {
+	return &{{package_name}}HandlerDependency{useCase: useCase}
+}

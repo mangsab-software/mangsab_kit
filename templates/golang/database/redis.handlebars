@@ -1,0 +1,32 @@
+package database
+
+import (
+	"context"
+
+	"github.com/redis/go-redis/v9"
+	"github.com/rs/zerolog/log"
+)
+
+type (
+	RedisSetup struct {
+		Endpoint string
+		Password string
+		Port     string
+	}
+)
+
+func (r *RedisSetup) NewRedis() *redis.Client {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     r.Endpoint + ":" + r.Port,
+		Password: r.Password, // no password set
+		DB:       0,          // use default DB
+	})
+	return rdb
+}
+
+func (_ *RedisSetup) TestPing(ctx context.Context, client *redis.Client) {
+	if err := client.Ping(ctx); err.Err() != nil {
+		log.Fatal().Err(err.Err()).Msg("[Redis] can't Ping to Server")
+	}
+	log.Info().Msg("[Redis] Ping to Server Success")
+}

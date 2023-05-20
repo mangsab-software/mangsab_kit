@@ -9,3 +9,38 @@ type {{package_name}}HandlerDependency struct {
 func New{{name}}Handler(useCase {{name}}UseCase) {{name}}Handler {
 	return &{{package_name}}HandlerDependency{useCase: useCase}
 }
+
+func (h *{{package_name}}HandlerDependency) FindAll(ctx *fiber.Ctx) error {
+	return ctx.Status(200).JSON(fiber.Map{
+		"code": 200,
+		"data": nil,
+	})
+}
+
+func (h *{{package_name}}HandlerDependency) FindOne(ctx *fiber.Ctx) error {
+	return ctx.Status(200).JSON(fiber.Map{
+		"code": 200,
+		"data": nil,
+	})
+}
+
+func (h *{{package_name}}HandlerDependency) Create(ctx *fiber.Ctx) error {
+	return ctx.Status(200).JSON(fiber.Map{
+		"code": 201,
+		"data": nil,
+	})
+}
+
+func (h *{{package_name}}HandlerDependency) Update(ctx *fiber.Ctx) error {
+	return ctx.Status(200).JSON(fiber.Map{
+		"code": 200,
+		"data": nil,
+	})
+}
+
+func (h *{{package_name}}HandlerDependency) Delete(ctx *fiber.Ctx) error {
+	return ctx.Status(200).JSON(fiber.Map{
+		"code": 204,
+		"data": nil,
+	})
+}

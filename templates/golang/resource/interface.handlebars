@@ -2,8 +2,26 @@ package {{package_name}}
 
 import "github.com/gofiber/fiber/v2"
 
-type {{name}}Handler interface {}
+type {{name}}Handler interface {
+	FindAll(ctx *fiber.Ctx) error
+	FindOne(ctx *fiber.Ctx) error
+	Create(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
+	Delete(ctx *fiber.Ctx) error
+}
 
-type {{name}}UseCase interface{}
+type {{name}}UseCase interface{
+	FindAll() error
+	FindOne() error
+	Create() error
+	Update() error
+	Delete() error
+}
 
-type {{name}}Repository interface {}
+type {{name}}Repository interface {
+	FindAll() error
+	FindOne() error
+	Create() error
+	Update() error
+	Delete() error
+}

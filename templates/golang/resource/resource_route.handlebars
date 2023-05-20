@@ -8,5 +8,9 @@ func (r *SetupRoute) New{{name}}Route() {
 	handler := {{package_name}}.New{{name}}Handler(usecase)
 	{{package_name}} := r.API.Group("{{package_name}}")
 
-	{{package_name}}.Post("/", handler.Register)
+	{{package_name}}.Get("/", handler.FindAll)
+	{{package_name}}.Get("/:id", handler.FindOne)
+	{{package_name}}.Post("/", handler.Create)
+	{{package_name}}.Put("/", handler.Update)
+	{{package_name}}.Delete("/", handler.Delete)
 }

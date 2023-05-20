@@ -7,3 +7,23 @@ type {{package_name}}UseCaseDependency struct {
 func New{{name}}UseCase(repository {{name}}Repository) {{name}}UseCase {
 	return &{{package_name}}UseCaseDependency{repository: repository}
 }
+
+func (u *{{package_name}}UseCaseDependency) FindAll() error {
+	return nil
+}
+
+func (u *{{package_name}}UseCaseDependency) FindOne() error {
+	return nil
+}
+
+func (u *{{package_name}}UseCaseDependency) Create() error {
+	return nil
+}
+
+func (u *{{package_name}}UseCaseDependency) Update() error {
+	return nil
+}
+
+func (u *{{package_name}}UseCaseDependency) Delete() error {
+	return nil
+}

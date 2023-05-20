@@ -9,3 +9,23 @@ type {{package_name}}RepositoryDependency struct {
 func New{{name}}Repository(db *mongo.Client) {{name}}Repository {
 	return &{{package_name}}RepositoryDependency{DB: db}
 }
+
+func (r *{{package_name}}RepositoryDependency) FindAll() error {
+	return nil
+}
+
+func (r *{{package_name}}RepositoryDependency) FindOne() error {
+	return nil
+}
+
+func (r *{{package_name}}RepositoryDependency) Create() error {
+	return nil
+}
+
+func (r *{{package_name}}RepositoryDependency) Update() error {
+	return nil
+}
+
+func (r *{{package_name}}RepositoryDependency) Delete() error {
+	return nil
+}

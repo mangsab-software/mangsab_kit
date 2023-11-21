@@ -1,9 +1,15 @@
 import Handlebars from "handlebars";
 import fs from "fs-extra";
 import path from "path";
+import { IFileSystem } from "../interfaces/filesystem.js";
 const root_path = path.dirname(process.argv[1]);
 
-export const WriteFile = async (_path_call, _path_template, _file, _data) => {
+export const WriteFile = async (
+  _path_call: string,
+  _path_template: string,
+  _file: IFileSystem,
+  _data: any
+) => {
   const file_name =
     _file.extension != null ? _file.name + ".handlebars" : _file.name;
   fs.readFile(
@@ -30,13 +36,19 @@ export const WriteFile = async (_path_call, _path_template, _file, _data) => {
   );
 };
 
-export const CreateDictionary = async (_path) => {
+export const CreateDictionary = (_path: string) => {
   if (!fs.existsSync(_path)) {
     fs.mkdirSync(_path, { recursive: true });
   }
 };
 
-export const ReadPackageName = async (_path, _file) => {
-  const data = await fs.readFile(_path + "/" + _file, "utf-8");
-  return data.match(/(^.*)/)[1].split(" ")[1];
+export const ReadPackageName = async (_path: string, _file: string) => {
+  if (await fs.exists(_path)) {
+    const data = await fs.readFile(_path + "/" + _file, "utf-8");
+    if (data == null || data == undefined || typeof data != "string") return;
+    return data.match(/(^.*)/)?.[1].split(" ")[1];
+  } else {
+    console.log(`not found ${_file}`);
+    return;
+  }
 };

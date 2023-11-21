@@ -8,23 +8,19 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/helmet/v2"
 	"github.com/redis/go-redis/v9"
-	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
 type (
-	SetupApp struct {
-		DB    *mongo.Client
-		Redis *redis.Client
-	}
 	SetupRoute struct {
-		DB    *mongo.Client
+		DB    *gorm.DB
 		Redis *redis.Client
-		API fiber.Router
+		Route fiber.Router
 	}
 )
 
 // SetupRouter is function setup main router controller
-func (s *SetupApp) NewApp() *fiber.App {
+func SetupRouter(db *gorm.DB, rd *redis.Client) *fiber.App {
 	r := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		CaseSensitive:         true,
@@ -39,9 +35,13 @@ func (s *SetupApp) NewApp() *fiber.App {
 		TimeZone:   "Asia/Bangkok",
 	}))
 	r.Use(requestid.New())
+	r.Use(middlewares.InjectZeroLog())
 	api := r.Group("api")
+	v1 := api.Group("v1")
 	setupRoute := SetupRoute{
-		API: api,
+		DB:    db,
+		Redis: rd,
+		Route: v1,
 	}
 
 	return r

@@ -1,23 +1,35 @@
 {
   "name": "mangsab-kit",
-  "version": "1.0.1",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.2",
+  "description": "CLI for mangsab team",
+  "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "mangsab": "index.js"
+    "mangsab": "dist/index.js"
   },
   "scripts": {
-    "dev": "node index.js",
+    "dev": "npm run build && node dist/index.js",
+    "build": "tsc && npm run copy",
+    "copy": "copyfiles -u 1 src/templates/**/* dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "THANAPHOOM AUNCHIT",
   "license": "MIT",
   "dependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
     "figlet": "^1.6.0",
     "fs-extra": "^11.1.1",
+    "glob": "^10.3.10",
     "handlebars": "^4.7.7",
-    "inquirer": "^9.2.4"
+    "inquirer": "^9.2.4",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.8",
+    "@types/node": "^20.9.3",
+    "copyfiles": "^2.4.1",
+    "typescript": "^5.3.2"
   }
 }

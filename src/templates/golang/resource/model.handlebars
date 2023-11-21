@@ -2,14 +2,12 @@ package {{package_name}}
 
 import (
 	"time"
+	"gorm.io/gorm"
 )
 
 type {{name}} struct {
-	{{name}}Id     int64
+	gorm.Model
 	IsActive     bool
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    time.Time
 }
 
 func (b *{{name}}) TableName() string {

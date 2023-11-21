@@ -1,0 +1,33 @@
+package database
+
+import (
+	"fmt"
+
+	"github.com/rs/zerolog/log"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+)
+
+type (
+	GormSetup struct {
+		Endpoint string
+		Username string
+		Password string
+		Port     string
+		DBName   string
+	}
+)
+
+func (g *GormSetup) NewDatabase() *gorm.DB {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Bangkok",
+		g.Endpoint, g.Username, g.Password, g.DBName, g.Port)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal().Err(err).Msg("[Gorm] can't connected to database")
+	}
+	return db
+}
+
+func (g *GormSetup) Migration(db *gorm.DB) {
+	db.AutoMigrate()
+}

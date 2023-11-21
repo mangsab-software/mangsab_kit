@@ -1,5 +1,7 @@
 import inquirer from "inquirer";
+import { exec } from "node:child_process";
 import { CreateDictionary, WriteFile, ReadPackageName } from "../filesystem.js";
+import { IFileSystem } from "../../interfaces/filesystem.js";
 const prompt = inquirer.createPromptModule();
 
 export default class Golang {
@@ -19,6 +21,8 @@ export default class Golang {
       case 2:
         this.#generate_resource();
         break;
+      default:
+        process.exit(0);
     }
   }
 
@@ -30,6 +34,7 @@ export default class Golang {
       choices: [
         { name: "New Project", value: 1 },
         { name: "Generate Resource", value: 2 },
+        { name: "Exit", value: null },
       ],
     });
   }
@@ -51,19 +56,26 @@ export default class Golang {
 
     let new_path = this.path_call;
     if (dictionary) {
-      new_path += "/" + project_name;
+      new_path += "\\" + project_name;
       CreateDictionary(new_path);
     }
 
-    const files = [
-      { name: "go", extension: "mod" },
+    exec(`go mod init ${project_name}`, {cwd: new_path}, (error) => {
+      if (error) console.log("can't run go mod init");
+    });
+
+    const files: IFileSystem[] = [
       { name: "main", extension: "go" },
-      { name: "database/mongodb", extension: "go" },
+      { name: "database/gorm", extension: "go" },
       { name: "database/redis", extension: "go" },
-      { name: "routes/route", extension: "go" },
+      { name: "routes/router", extension: "go" },
       { name: "dockerfile", extension: null },
-      { rename: ".gitignore", name: ".gitignore.handlebars", extension: null },
-      { name: ".env.example", extension: null },
+      { rename: ".gitignore", name: "gitignore.handlebars", extension: null },
+      {
+        rename: ".env.example",
+        name: "env.example.handlebars",
+        extension: null,
+      },
     ];
 
     const data = { project_name: project_name };

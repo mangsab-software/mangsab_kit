@@ -13,7 +13,7 @@ export const WriteFile = async (
   const file_name =
     _file.extension != null ? _file.name + ".handlebars" : _file.name;
   fs.readFile(
-    `${root_path}/${_path_template}/${file_name}`,
+    path.join(root_path,_path_template, file_name),
     "utf-8",
     (err, f) => {
       if (err) {
@@ -25,7 +25,7 @@ export const WriteFile = async (
       const name_file = `${_file.rename != null ? _file.rename : _file.name}${
         _file.extension != null ? "." + _file.extension : ""
       }`;
-      const new_file = `${_path_call}/${name_file}`;
+      const new_file = path.join(_path_call, name_file)
       fs.outputFile(new_file, result, () => {
         if (err) {
           console.log(err);
@@ -44,7 +44,7 @@ export const CreateDictionary = (_path: string) => {
 
 export const ReadPackageName = async (_path: string, _file: string) => {
   if (await fs.exists(_path)) {
-    const data = await fs.readFile(_path + "/" + _file, "utf-8");
+    const data = await fs.readFile(path.join(_path, _file), "utf-8");
     if (data == null || data == undefined || typeof data != "string") return;
     return data.match(/(^.*)/)?.[1].split(" ")[1];
   } else {

@@ -2,6 +2,7 @@ import inquirer from "inquirer";
 import { exec } from "node:child_process";
 import { CreateDictionary, WriteFile, ReadPackageName } from "../filesystem.js";
 import { IFileSystem } from "../../interfaces/filesystem.js";
+import path from "path";
 const prompt = inquirer.createPromptModule();
 
 export default class Golang {
@@ -56,7 +57,7 @@ export default class Golang {
 
     let new_path = this.path_call;
     if (dictionary) {
-      new_path += "\\" + project_name;
+      new_path = path.join(new_path, project_name)
       CreateDictionary(new_path);
     }
 

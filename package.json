@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "npm run build && node dist/index.js",
     "build": "tsc && npm run copy",
-    "copy": "copyfiles -u 1 src/templates/**/* dist",
+    "copy": "cp -r src/templates dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

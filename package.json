@@ -1,6 +1,6 @@
 {
   "name": "mangsab-kit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "CLI for mangsab team",
   "main": "dist/index.js",
   "type": "module",
